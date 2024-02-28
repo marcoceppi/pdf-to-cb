@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    name: Test & Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+      - name: System Deps
+        run: |
+          sudo apt update
+          sudo apt install poppler-utils
+      - name: Cache Dependencies
+        id: cache-deps
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: pydeps-${{ hashFiles('**/poetry.lock') }}
+      - name: Install Dependencies
+        run: poetry install --no-interaction --no-root
+        if: steps.cache-deps.outputs.cache-hit != 'true'
+      - name: Install Project
+        run: poetry install --no-interaction
+      - name: Check code formatting
+        run: poetry run black --check pdf2cb
+      - name: Lint code
+        run: poetry run ruff pdf2cb
+      - name: Run pytest
+        run: poetry run pytest --cov=pdf2cb --cov-report=term-missing

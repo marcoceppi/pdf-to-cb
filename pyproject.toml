@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "pdf-to-cb"
+version = "0.1.0"
+description = "PDF to Comic Book format"
+authors = ["Marco Ceppi <marco@ceppi.net>"]
+license = "Apache-2.0"
+readme = "README.md"
+packages = [
+    { include = "pdf2cb" },
+]
+
+[tool.poetry.scripts]
+pdf-to-cb = 'pdf2cb.cli:app'
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pdf2image = "^1.17.0"
+typer = "^0.9.0"
+rich = "^13.7.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.2.0"
+ruff = "^0.2.2"
+pytest = "^8.0.2"
+pytest-cov = "^4.1.0"
+
+[tool.coverage.run]
+omit = [
+    "pdf2cb/__main__.py",
+]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,8 +1,49 @@
-# pdf-to-cbz
-Python script which converts PDF files to CBZ format for PerfectViewer or other comic reader.
+# PDF to Comic Book format
 
-Just change the read_dir and write_dir variables at the top of the script and run from terminal.
+Python CLI to convert PDFs to either CBZ or CBR.
 
-Tested in Linux and Windows.
+## Install
 
-I've got a lot of books and papers in PDF format and I find them easier to read in comic readers.
+### Pre-requisites
+
+poppler needs to be installed and available in path before using pdf-to-cb.
+
+**Debian / Ubuntu**
+```sh
+sudo apt install poppler-utils
+```
+
+**RHEL / CentOS / Fedora**
+```sh
+sudo dnf install poppler poppler-utils
+```
+
+**Arch**
+```sh
+sudo pacman -S poppler
+```
+
+**Mac / OSX**
+```sh
+brew install poppler
+```
+
+**Windows**
+This isn't tested or fully supported for this package. However, downloading and installing [poppler-windows](https://github.com/oschwartz10612/poppler-windows) into the system path may work.
+
+### pipx
+
+pipx is available for Linux, OSX, and Windows. Follow the [install instructions first for pipx](https://pipx.pypa.io/stable/installation/) then the following:
+
+```
+pipx install pdf-to-cb
+```
+
+## Usage
+
+```sh
+pdf-to-cb --format cbz *.pdf ~/complete/
+```
+
+
+Original inspiration: https://github.com/mathewskevin/pdf-to-cbz
