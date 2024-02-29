@@ -160,5 +160,6 @@ cython_debug/
 #.idea/
 
 *.pdf
+!tests/data/*.pdf
 *.cb[z|r]
 .DS_Store
