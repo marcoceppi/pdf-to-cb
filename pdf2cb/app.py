@@ -4,7 +4,7 @@ import enum
 import zipfile
 from pathlib import Path
 from io import BytesIO
-
+from PIL import Image
 import pdf2image
 
 
@@ -17,14 +17,11 @@ class Pdf2Cb:
     def __init__(self, pdf: Path, format: ArchiveFormat = ArchiveFormat.CBZ):
         """Convert a PDF file to a ComicBook archive"""
         self.source = Path(pdf)
-        self.pages: list = []
+        self.pages: list[Image.Image] = []
         if not self.source.is_file():
             raise ValueError(f"pdf_file {self.source} is not a file")
 
-        if format not in ArchiveFormat:
-            raise ValueError(f"{format} is not one of {ArchiveFormat}")
-
-        self.format = format
+        self.format = ArchiveFormat(format)
 
     def extract(self, dest: Path | None = None, **kwargs):
         """Extract a PDF to images"""
@@ -32,7 +29,7 @@ class Pdf2Cb:
             raise ValueError(f"dest {dest} is not a directory")
 
         default_args = {"fmt": "jpg", "output_folder": dest}
-        self.images = pdf2image.convert_from_path(
+        self.pages = pdf2image.convert_from_path(
             pdf_path=self.source,
             **(default_args | kwargs),
         )
@@ -59,7 +56,7 @@ class Pdf2Cb:
     def _create_cbz(self, output: Path):
         """Create a CBZ archive from a directory"""
         archive = zipfile.ZipFile(output, mode="w")
-        for id, image in enumerate(self.images, 1):
+        for id, image in enumerate(self.pages, 1):
             image_fp = BytesIO()
             image.save(image_fp, format="JPEG")
             archive.writestr(

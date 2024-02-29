@@ -19,7 +19,9 @@ console = Console()
 )
 def convert(
     inputs: Annotated[list[Path], typer.Argument(help="PDFs to convert")],
-    output: Annotated[Path, typer.Argument(help="where to place converted PDFs")],
+    output: Annotated[
+        Path, typer.Argument(help="where to place converted PDFs")
+    ] = None,
     format: Annotated[
         ArchiveFormat, typer.Option(help="format to convert the PDF to")
     ] = ArchiveFormat.CBZ,
