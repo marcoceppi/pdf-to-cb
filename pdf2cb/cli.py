@@ -1,3 +1,4 @@
+# pylint: disable=C0301
 """CLI module"""
 
 from pathlib import Path
@@ -22,12 +23,12 @@ def convert(
     output: Annotated[
         Path, typer.Argument(help="where to place converted PDFs")
     ] = None,
-    format: Annotated[
-        ArchiveFormat, typer.Option(help="format to convert the PDF to")
+    fmt: Annotated[
+        ArchiveFormat, typer.Option("--format", help="format to convert the PDF to")
     ] = ArchiveFormat.CBZ,
 ):
     """Convert PDF to Comic Book formats"""
-    if format is ArchiveFormat.CBR:
+    if fmt is ArchiveFormat.CBR:
         raise ValueError("CBR format not supported yet")
 
     if output.is_file():
@@ -42,7 +43,7 @@ def convert(
 
     status = console.status("")
     for f in inputs:
-        comic = Pdf2Cb(f, format)
+        comic = Pdf2Cb(f, fmt)
         status.update(f"[bold green](extracting)[/] [purple]{f.name}")
         status.start()
         comic.extract()

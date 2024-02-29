@@ -9,19 +9,23 @@ import pdf2image
 
 
 class ArchiveFormat(enum.StrEnum):
+    """Supported Archive Formats"""
+
     CBR = "cbr"
     CBZ = "cbz"
 
 
 class Pdf2Cb:
-    def __init__(self, pdf: Path, format: ArchiveFormat = ArchiveFormat.CBZ):
+    """Convert PDFs to Comic Book formats"""
+
+    def __init__(self, pdf: Path, fmt: ArchiveFormat = ArchiveFormat.CBZ):
         """Convert a PDF file to a ComicBook archive"""
         self.source = Path(pdf)
         self.pages: list[Image.Image] = []
         if not self.source.is_file():
             raise ValueError(f"pdf_file {self.source} is not a file")
 
-        self.format = ArchiveFormat(format)
+        self.format = ArchiveFormat(fmt)
 
     def extract(self, dest: Path | None = None, **kwargs):
         """Extract a PDF to images"""
@@ -55,12 +59,12 @@ class Pdf2Cb:
 
     def _create_cbz(self, output: Path):
         """Create a CBZ archive from a directory"""
-        archive = zipfile.ZipFile(output, mode="w")
-        for id, image in enumerate(self.pages, 1):
-            image_fp = BytesIO()
-            image.save(image_fp, format="JPEG")
-            archive.writestr(
-                f"{self.source.stem}_{id}.jpg",
-                image_fp.getvalue(),
-                compress_type=zipfile.ZIP_DEFLATED,
-            )
+        with zipfile.ZipFile(output, mode="w") as archive:
+            for idx, image in enumerate(self.pages, 1):
+                image_fp = BytesIO()
+                image.save(image_fp, format="JPEG")
+                archive.writestr(
+                    f"{self.source.stem}_{idx}.jpg",
+                    image_fp.getvalue(),
+                    compress_type=zipfile.ZIP_DEFLATED,
+                )
