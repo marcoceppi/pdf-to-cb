@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pdf-to-cb"
-version = "0.1.0"
+version = "1.0.0"
 description = "PDF to Comic Book format"
 authors = ["Marco Ceppi <marco@ceppi.net>"]
 license = "Apache-2.0"
